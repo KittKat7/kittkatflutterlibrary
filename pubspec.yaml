@@ -15,8 +15,6 @@ dependencies:
   flutter_markdown:
   # Saving and loading simple persistant data. flutter.dev
   shared_preferences:
-  # Provider is used to keep the theme up to date with the settings.
-  indexed_db: 
 
 dev_dependencies:
   flutter_test:
