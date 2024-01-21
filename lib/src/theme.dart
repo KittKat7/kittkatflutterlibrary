@@ -6,9 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:kittkatflutterlibrary/src/platform.dart';
 import 'package:provider/provider.dart';
 
+/// The theme of the app, globally accessable.
+AppTheme _appTheme = AppTheme();
+AppTheme get appTheme => _appTheme;
+
 /// Runs the provided [myApp] wrapped in a [ChangeNotifierProvider].
 /// The AppTheme [theme] which is passed in will be the theme that is tracked and updated.
 void runThemedApp(Widget myApp, AppTheme theme) {
+  _appTheme = theme;
   runApp(ChangeNotifierProvider<AppTheme>(
     create: (context) => theme,
     child: myApp
