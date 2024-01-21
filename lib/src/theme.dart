@@ -169,3 +169,8 @@ class AppTheme with ChangeNotifier {
     _buildAppTheme();
   }// cycleThemeMode
 }// AppTheme
+
+
+ColorScheme colorScheme(BuildContext context) {
+  return Theme.of(context).colorScheme;
+}
