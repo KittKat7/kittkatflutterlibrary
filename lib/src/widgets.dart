@@ -6,4 +6,5 @@ library widgets;
 
 export './widgets/aspect.dart';
 export './widgets/marked.dart';
+export './widgets/popups.dart';
 export './widgets/simple_text.dart';

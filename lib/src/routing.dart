@@ -16,3 +16,15 @@ genRoute(Widget widget) {
     builder: (context) => widget,
   );
 }// genRoute
+
+
+Map<String, List<dynamic>> _namedRoutes = {};
+
+Map<String, Widget Function(BuildContext)> generateNamedRoutes(Map<String, List> pageRoutes) {
+	Map<String, Widget Function(BuildContext)> routes = {};
+	for (String name in pageRoutes.keys) {
+		routes[pageRoutes[name]![0]] = (context) => pageRoutes[name]![1];
+	}
+	_namedRoutes = pageRoutes;
+	return routes;
+}

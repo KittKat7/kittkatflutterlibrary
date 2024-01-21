@@ -36,7 +36,7 @@ const List<MaterialColor> _baseColors = [
 /// returned. Otherwise, the returned list will include more colors.
 List<MaterialColor> getAvailableColors() {
   // If running in lite mode, return a copy of [_baseColors].
-  if (!AppPlatform.isLite) return List.from(_baseColors);
+  if (AppPlatform.isLite) return List.from(_baseColors);
 
   // Make a copy of [_baseColros] to add additional colors to.
   List<MaterialColor> availableColors = List.from(_baseColors);
@@ -140,6 +140,14 @@ class AppTheme with ChangeNotifier {
     _buildAppTheme();
   }// cycleColors
 
+  /// Sets the theme mode to light.
+  /// Sets the theme mode to light mode, and runs `_buildAppTheme()` to build the ThemeData and
+  /// notify the listeners.
+  void setLightMode() {
+    _themeMode = ThemeMode.light;
+    _buildAppTheme();
+  }// setLightMode
+
   /// Sets the theme mode to dark.
   /// Sets the theme mode to dark mode, and runs `_buildAppTheme()` to build the ThemeData and
   /// notify the listeners.
@@ -147,6 +155,14 @@ class AppTheme with ChangeNotifier {
     _themeMode = ThemeMode.dark;
     _buildAppTheme();
   }// setDarkMode
+
+  /// Sets the theme mode to system.
+  /// Sets the theme mode to system mode, and runs `_buildAppTheme()` to build the ThemeData and
+  /// notify the listeners.
+  void setSystemMode() {
+    _themeMode = ThemeMode.system;
+    _buildAppTheme();
+  }// setSystemMode
 
   /// Cycles through ThemeModes
   /// Determines what the current ThemeMode is, and cycles to the next one. It cycles from system to
@@ -168,6 +184,14 @@ class AppTheme with ChangeNotifier {
     }// switch
     _buildAppTheme();
   }// cycleThemeMode
+
+  /// Sets the theme color to be the provided color.
+  /// Takes the parameter [color] and sets [_themeColor] to match. Then has the theme be build and
+  /// notify listeners.
+  void setColor(MaterialColor color) {
+    _themeColor = color;
+    _buildAppTheme();
+  }// setColor
 }// AppTheme
 
 
