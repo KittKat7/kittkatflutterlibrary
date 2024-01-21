@@ -1,5 +1,5 @@
 /// Copyright 2024 kittkat; Licensed under the Apache License v2.0.
-/// This file is part of kittkatflutterlibrary. https://github.com/KittKat7/kittkatflutterlibrary
+/// This file is part of kittkatflutterlibrary (https://github.com/KittKat7/kittkatflutterlibrary).
 /// For license info go to http://www.apache.org/licenses/LICENSE-2.0
 
 import 'package:flutter/material.dart';
@@ -40,7 +40,7 @@ class Aspect extends StatelessWidget {
   final double height;
   final Widget child;
 
-  Aspect({double? width, double? height, required this.child})
+  Aspect({super.key, double? width, double? height, required this.child})
     : width = width ?? aspectWidth, height = height ?? aspectHeight;
 
   @override

@@ -15,7 +15,6 @@
 library kittkatflutterlibrary;
 
 export './src/platform.dart';
-export './src/storage/shared_preferences.dart';
+export './src/storage.dart';
 export './src/theme.dart';
-
 export './src/widgets.dart';

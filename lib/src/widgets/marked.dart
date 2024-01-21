@@ -1,5 +1,5 @@
 /// Copyright 2024 kittkat; Licensed under the Apache License v2.0.
-/// This file is part of kittkatflutterlibrary. https://github.com/KittKat7/kittkatflutterlibrary
+/// This file is part of kittkatflutterlibrary (https://github.com/KittKat7/kittkatflutterlibrary).
 /// For license info go to http://www.apache.org/licenses/LICENSE-2.0
 
 import 'package:flutter/widgets.dart';
@@ -37,5 +37,5 @@ class Marked extends StatelessWidget {
       data: data,
       styleSheet: MarkdownStyleSheet(textScaleFactor: scale),
       selectable: selectable,);
-  }//e build()
-}//e Marked
+  }// build()
+}// Marked

@@ -1,11 +1,22 @@
 /// Copyright 2024 kittkat; Licensed under the Apache License v2.0.
-/// This file is part of kittkatflutterlibrary. https://github.com/KittKat7/kittkatflutterlibrary
+/// This file is part of kittkatflutterlibrary (https://github.com/KittKat7/kittkatflutterlibrary).
 /// For license info go to http://www.apache.org/licenses/LICENSE-2.0
 
 import 'package:flutter/material.dart';
 import 'package:kittkatflutterlibrary/src/platform.dart';
-// import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
+/// Runs the provided [myApp] wrapped in a [ChangeNotifierProvider].
+/// The AppTheme [theme] which is passed in will be the theme that is tracked and updated.
+void runThemedApp(Widget myApp, AppTheme theme) {
+  runApp(ChangeNotifierProvider<AppTheme>(
+    create: (context) => theme,
+    child: myApp
+  ));
+}// runThemedApp
+
+/// The base colors, which all platforms have access to, including if the platform is classified as
+/// lite.
 const List<MaterialColor> _baseColors = [
   Colors.red,
   Colors.orange,
@@ -13,12 +24,19 @@ const List<MaterialColor> _baseColors = [
   Colors.green,
   Colors.blue,
   Colors.purple,
-];
+];// _baseColors
 
+/// Gets the available colors based on the platform, and returns a `List<MaterialColor>` of the
+/// available colors. If the app is running in lite mode / web mode, then [_baseColors] will be
+/// returned. Otherwise, the returned list will include more colors.
 List<MaterialColor> getAvailableColors() {
+  // If running in lite mode, return a copy of [_baseColors].
   if (!AppPlatform.isLite) return List.from(_baseColors);
+
+  // Make a copy of [_baseColros] to add additional colors to.
   List<MaterialColor> availableColors = List.from(_baseColors);
 
+  // Add additional colors to [availableColors].
   availableColors.addAll([
     Colors.pink,
     Colors.cyan,
@@ -26,47 +44,78 @@ List<MaterialColor> getAvailableColors() {
     Colors.indigo,
     Colors.teal,
   ]);
+
+  // Return the available colors
   return availableColors;
-}
+}// getAvailableColors
 
-
-class AppTheme extends ChangeNotifier {
+/// A theme which is used for theming the app.
+/// The [AppTheme] is a [ChangeNotifier] wrapper around [ThemeData]. This allows the theme to be
+/// updated, and have widgets using the theme to be notified of the updates, and update themselves.
+class AppTheme with ChangeNotifier {
+  /// The material color of the theme.
   MaterialColor _themeColor;
+  /// The light/dark/system mode of the theme.
   ThemeMode _themeMode;
+  /// The actual theme data, light.
   ThemeData _themeData;
-  ThemeData get themeData => _themeData;
+  /// The actual theme data, dark.
+  ThemeData _themeDataDark;
 
-  // ThemeMode mode = Theme.of(context).brightness;
+  /// Constructor
+  /// Creates an [AppTheme] object. If provided, [themeMode] is used to set [_themeMode] and
+  /// [themeColor] is used to set [_themeColor]. Then [_themeData] is build using [_themeMode] and
+  /// [_themeColor].
+  AppTheme({ThemeMode themeMode = ThemeMode.system, MaterialColor themeColor = Colors.red})
+  : _themeMode = themeMode, _themeColor = themeColor, _themeData = ThemeData(),
+  _themeDataDark = ThemeData() {
+    // Build the theme.
+    _buildAppTheme();
+  }// AppTheme
 
-  AppTheme({required ThemeMode themeMode, required MaterialColor themeColor})
-  : _themeMode = themeMode, _themeColor = themeColor, _themeData = ThemeData(
-    brightness: Brightness.light,
-    primarySwatch: themeColor,
-  );
+  /// Returns the theme data for the light theme.
+  /// Returns the [_themeData] from the Provider.
+  ThemeData getThemeDataLight(BuildContext context) {
+    return Provider.of<AppTheme>(context)._themeData;
+  }// getThemeData
+
+  /// Returns the theme data for the dark theme.
+  /// Returns the [_themeDataDark] from the Provider.
+  ThemeData getThemeDataDark(BuildContext context) {
+    return Provider.of<AppTheme>(context)._themeDataDark;
+  }// getThemeData
+
+
+  /// Returns the theme mode.
+  /// Returns the [_themeMode] from the Provider.
+  ThemeMode getThemeMode(BuildContext context) {
+    return Provider.of<AppTheme>(context)._themeMode;
+  }// getThemeMode()
 
   /// Builds the theme with the given settings.
-  /// 
-  /// Uses the theme comonents, color, and mode, and sets [themeData] to reflect those factors.
-  /// Then calls notifyListener() to update anything using the theme.
-  void buildAppTheme() {
-    Brightness brightness = Brightness.light;
-    // The brightness used when building the theme.
-    // Determine the brightness. // TODO
-    if (_themeMode == ThemeMode.dark) {
-      brightness = Brightness.dark;
-    }//e if
-
+  /// Uses the theme comonents, color, and mode, and sets [_themeData] to reflect those factors.
+  /// Then calls `notifyListener()` to update anything using the theme.
+  void _buildAppTheme() {
     // Update [_themeData] to reflect any changes to the components.
     _themeData = ThemeData(
-      brightness: brightness,
-      primarySwatch: _themeColor,
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: _themeColor,
+        brightness: Brightness.light,
+      )
+    );
+
+    // Update [_themeData] to reflect any changes to the components.
+    _themeDataDark = ThemeData(
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: _themeColor,
+        brightness: Brightness.dark,
+      )
     );
     // Notify the listeners.
     notifyListeners();
-  }//e buildThemeData
+  }// buildThemeData
 
   /// Cycles the current color to the next color in the list of available colors.
-  /// 
   /// Changes the theme color to the next color in the list of available colors. If the current
   /// color is NOT in the list, then it resest to the begening of the list.
   void cylceColor() {
@@ -81,179 +130,37 @@ class AppTheme extends ChangeNotifier {
       _themeColor = colors[0];
     } else {
       _themeColor = colors[i];
-    }//e if else
+    }// if else
     // Build the new theme.
-    buildAppTheme();
-  }//e cycleColors
+    _buildAppTheme();
+  }// cycleColors
 
-  // Brightness _modeToBrightness() {
-  //   if (themeMode == ThemeMode.light) {
-  //     return Brightness.light;
-  //   } else if (themeMode == ThemeMode.dark) {
-  //     return Brightness.dark;
-  //   } else {
-  //     return Theme.of(context).brightness
-  //   }
-  // }
-}
+  /// Sets the theme mode to dark.
+  /// Sets the theme mode to dark mode, and runs `_buildAppTheme()` to build the ThemeData and
+  /// notify the listeners.
+  void setDarkMode() {
+    _themeMode = ThemeMode.dark;
+    _buildAppTheme();
+  }// setDarkMode
 
-// // MaterialColor defColor = Colors.amber;
-// MaterialColor defColor = Colors.blue;
-
-// Map<String, MaterialColor> themeColorMap = {
-//   'red': Colors.red, 
-//   'orange': Colors.orange,
-//   'yellow': Colors.yellow,
-//   'green': Colors.green,
-//   'blue': Colors.blue,
-//   'purple': Colors.purple,
-//   'cyan': Colors.cyan
-// };
-
-// List<String> get getAvailableThemeColors {
-//   return themeColorMap.keys.toList();
-// }
-
-// MaterialColor getThemeColor(String c) {
-//   if (themeColorMap.containsKey(c)) {
-//     return themeColorMap.values.first;
-//   }
-//   return themeColorMap[c]!;
-// }
-
-// late MaterialColor themeColor;
-
-// Future<void> initTheme() async {
-//   if (!themeColorMap.containsKey(getSetting('themeColor'))) {
-//   flutterkatSettings['themeColor'] = 'red';
-//   }
-//   themeColor = themeColorMap[getSetting('themeColor')]!;
-//   // themeColor = themeColorMap['red']!;
-// }
-
-// ThemeData getLightTheme(context) {
-//   return Provider.of<ColorTheme>(context).lightTheme;
-// }
-
-// ThemeData getDarkTheme(context) {
-//   return Provider.of<ColorTheme>(context).darkTheme;
-// }
-
-// ThemeData getTheme(context) {
-//   if (Theme.of(context).brightness == Brightness.light) {
-//     return Provider.of<ColorTheme>(context).lightTheme;
-//   }
-//   else if (Theme.of(context).brightness == Brightness.dark) {
-//     return Provider.of<ColorTheme>(context).darkTheme;
-//   } else {
-//     return Provider.of<ColorTheme>(context).theme;
-//   }
-// }
-
-// ThemeMode getThemeMode(context) {
-//   return Provider.of<AppThemeMode>(context).mode;
-// }
-
-// AppThemeMode getAppThemeMode(context) {
-//   return Provider.of<AppThemeMode>(context, listen: false);
-// }
-
-// class AppThemeMode with ChangeNotifier {
-//   ThemeMode mode = getSetting('themeMode') == 'light' ? ThemeMode.light : getSetting('themeMode') == 'dark' ? ThemeMode.dark : ThemeMode.system;
-  
-//   setLightMode() { mode = ThemeMode.light; flutterkatSettings['themeMode'] = 'light'; saveSettings(); return notifyListeners(); }
-//   setDarkMode() { mode = ThemeMode.dark; flutterkatSettings['themeMode'] = 'dark'; saveSettings(); return notifyListeners(); }
-//   setAutoMode() { mode = ThemeMode.system; flutterkatSettings['themeMode'] = 'auto'; saveSettings(); return notifyListeners(); }
-// }
-
-// class ColorTheme with ChangeNotifier{
-
-// 	ThemeData lightTheme = ThemeData(
-//     colorScheme: ColorScheme.fromSwatch(
-//       primarySwatch: themeColor,
-//       brightness: Brightness.light
-//     ),
-//     primarySwatch: themeColor,
-//     brightness: Brightness.light,
-//   );
-
-// 	ThemeData darkTheme = ThemeData(
-//     colorScheme: ColorScheme.fromSwatch(
-//       primarySwatch: themeColor,
-//       brightness: Brightness.dark
-//     ),
-//     primarySwatch: themeColor,
-//     brightness: Brightness.dark,
-//   );
-
-//   ThemeData theme = ThemeData(
-
-//   );
-
-// 	setColor(String colorName)
-// 	{
-// 		themeColor = themeColorMap[colorName] ?? themeColor;
-//     flutterkatSettings['themeColor'] = colorName;
-//     saveSettings();
-
-// 		lightTheme = ThemeData(
-//       colorScheme: ColorScheme.fromSwatch(
-//         primarySwatch: themeColor,
-//         brightness: Brightness.light
-//       ),
-// 			primarySwatch: themeColor,
-// 			brightness: Brightness.light,
-// 		);
-// 		darkTheme = ThemeData(
-//       colorScheme: ColorScheme.fromSwatch(
-//         primarySwatch: themeColor,
-//         brightness: Brightness.dark
-//       ),
-// 			primarySwatch: themeColor,
-// 			brightness: Brightness.dark,
-// 		);
-// 		return notifyListeners();
-// 	} // end setColor
-
-// 	setColorCyan()
-// 	{
-// 		themeColor = Colors.cyan;
-// 		lightTheme = ThemeData(
-//       colorScheme: ColorScheme.fromSwatch(
-//         primarySwatch: themeColor,
-//         brightness: Brightness.light
-//       ),
-// 			primarySwatch: themeColor,
-// 			brightness: Brightness.light,
-// 		);
-// 		darkTheme = ThemeData(
-//       colorScheme: ColorScheme.fromSwatch(
-//         primarySwatch: themeColor,
-//         brightness: Brightness.dark
-//       ),
-// 			primarySwatch: themeColor,
-// 			brightness: Brightness.dark,
-// 		);
-// 		return notifyListeners();
-// 	} // end setColor
-
-// 	cycleColor()
-// 	{
-// 		if (!themeColorMap.values.toList().contains(themeColor)) {
-// 			setColor(themeColorMap.keys.toList()[0]);
-// 		} else {
-// 			int index = themeColorMap.values.toList().indexOf(themeColor) + 1;
-// 			setColor(themeColorMap.keys.toList()[index >= (themeColorMap.keys.toList().length - 1) ? 0 : index]);
-// 		}
-// 	} // end cycleColor
-// }
-
-
-
-// ColorTheme getColorTheme(BuildContext context) {
-// 	return Provider.of<ColorTheme>(context, listen: false);
-// }
-
-// ColorScheme colorScheme(BuildContext context) {
-//   return Theme.of(context).colorScheme;
-// }
+  /// Cycles through ThemeModes
+  /// Determines what the current ThemeMode is, and cycles to the next one. It cycles from system to
+  /// light to dark then back to system.
+  void cycleThemeMode() {
+    // Determine current ThemeMode, and cycle to the next.
+    switch(_themeMode) {
+      case ThemeMode.system:
+        _themeMode = ThemeMode.light;
+        break;
+      case ThemeMode.light:
+        _themeMode = ThemeMode.dark;
+        break;
+      case ThemeMode.dark:
+        _themeMode = ThemeMode.system;
+        break;
+      default:
+        _themeMode = ThemeMode.light;
+    }// switch
+    _buildAppTheme();
+  }// cycleThemeMode
+}// AppTheme
