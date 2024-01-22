@@ -66,7 +66,7 @@ class _NativeAppDocuments implements _AppDocuments {
 
   @override
   Future<void> initiate() async {
-    appDocumentPath = AppPlatform.isWeb? '': (await getApplicationDocumentsDirectory()).path;
+    appDocumentPath = AppPlatform.isWeb? '': (await getApplicationSupportDirectory()).path;
   }// initNativeAppDocuments
 
   @override
@@ -90,7 +90,7 @@ class _NativeAppDocuments implements _AppDocuments {
 class _IndexedDBDocuments implements _AppDocuments {
 
   late Database _database;
-  final String storeName = 'applicationDocumentsDirectory';
+  final String storeName = 'applicationSupportDirectory';
 
   @override
   Future<void> initiate() async {
