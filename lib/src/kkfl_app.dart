@@ -15,3 +15,8 @@ class AppInformation {
     isInitiated = true;
   }// appNme
 }// AppInformation
+
+class KKFLNotInitializedException implements Exception {
+  String cause;
+  KKFLNotInitializedException(this.cause);
+}

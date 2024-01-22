@@ -2,6 +2,7 @@
 /// This file is part of kittkatflutterlibrary (https://github.com/KittKat7/kittkatflutterlibrary).
 /// For license info go to http://www.apache.org/licenses/LICENSE-2.0
 
+import 'package:kittkatflutterlibrary/src/kkfl_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String _kkflPrefix = 'kkfl-';
@@ -12,8 +13,11 @@ late final SharedPreferences _prefs;
 /// Initiates the shared preferences.
 /// Initiates the shared preferences with the prefix parameter. If a prefix is not passed, then the
 /// default prefix will be used, [_appPrefixDefault].
-Future<void> initiateSharedPreferences({String prefix = _appPrefixDefault}) async {
-  _appPrefix = prefix;
+Future<void> initSharedPreferences({String? prefix}) async {
+  if (!AppInformation.isInitiated) {
+    throw KKFLNotInitializedException('Unable to init shared preferences.');
+  }
+  _appPrefix = prefix?? AppInformation.name;
   SharedPreferences.setPrefix('');
   _prefs = await SharedPreferences.getInstance();
 }// initiateSharedPreferences()

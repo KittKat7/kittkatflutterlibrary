@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:idb_shim/idb.dart';
 import 'package:idb_shim/idb_browser.dart';
-import 'package:kittkatflutterlibrary/src/app_info.dart';
+import 'package:kittkatflutterlibrary/src/kkfl_app.dart';
 import 'package:path_provider/path_provider.dart';
 import '../platform.dart';
 
