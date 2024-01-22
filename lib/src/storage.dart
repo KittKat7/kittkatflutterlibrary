@@ -4,5 +4,5 @@
 
 library storage;
 
-export './storage/app_document_storage.dart';
+export './storage/app_internal_storage.dart';
 export './storage/shared_preferences.dart';

@@ -3,7 +3,7 @@
 /// For license info go to http://www.apache.org/licenses/LICENSE-2.0
 
 import 'package:flutter/material.dart';
-import 'package:kittkatflutterlibrary/src/app_info.dart';
+import 'package:kittkatflutterlibrary/src/kkfl_app.dart';
 import 'package:kittkatflutterlibrary/src/platform.dart';
 import 'package:provider/provider.dart';
 
