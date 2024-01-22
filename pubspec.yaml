@@ -17,6 +17,8 @@ dependencies:
   shared_preferences:
   # User for updating themes
   provider:
+  idb_shim:
+  path_provider:
 
 dev_dependencies:
   flutter_test:

@@ -5,7 +5,6 @@
 import 'package:flutter/foundation.dart';
 
 
-
 class AppPlatform {
   static const isWeb = kIsWeb;
   static final isLinux = defaultTargetPlatform == TargetPlatform.linux;
@@ -16,8 +15,4 @@ class AppPlatform {
 
   static final bool isDesktop = (isLinux || isWindows || isMacOs);
   static final bool isMobile = (isAndroid || isIOS);
-
-  static bool _isLite = false;
-  static set isLite(bool isLite) => _isLite = isLite;
-  static bool get isLite => isWeb || _isLite;
-}
+}// AppPlatform

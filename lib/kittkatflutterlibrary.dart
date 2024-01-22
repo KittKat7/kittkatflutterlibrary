@@ -14,6 +14,7 @@
 
 library kittkatflutterlibrary;
 
+export './src/app_info.dart';
 export './src/lang.dart';
 export './src/routing.dart';
 export './src/platform.dart';

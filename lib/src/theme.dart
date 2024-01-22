@@ -3,6 +3,7 @@
 /// For license info go to http://www.apache.org/licenses/LICENSE-2.0
 
 import 'package:flutter/material.dart';
+import 'package:kittkatflutterlibrary/src/app_info.dart';
 import 'package:kittkatflutterlibrary/src/platform.dart';
 import 'package:provider/provider.dart';
 
@@ -12,10 +13,12 @@ AppTheme get appTheme => _appTheme;
 
 /// Runs the provided [myApp] wrapped in a [ChangeNotifierProvider].
 /// The AppTheme [theme] which is passed in will be the theme that is tracked and updated.
-void runThemedApp(Widget myApp, AppTheme theme) {
-  _appTheme = theme;
+void runThemedApp(Widget myApp) {
+  if (!AppInformation.isInitiated) throw NoSuchMethodError;
+
+  _appTheme = AppInformation.theme;
   runApp(ChangeNotifierProvider<AppTheme>(
-    create: (context) => theme,
+    create: (context) => AppInformation.theme,
     child: myApp
   ));
 }// runThemedApp
@@ -36,7 +39,7 @@ const List<MaterialColor> _baseColors = [
 /// returned. Otherwise, the returned list will include more colors.
 List<MaterialColor> getAvailableColors() {
   // If running in lite mode, return a copy of [_baseColors].
-  if (AppPlatform.isLite) return List.from(_baseColors);
+  if (AppPlatform.isWeb) return List.from(_baseColors);
 
   // Make a copy of [_baseColros] to add additional colors to.
   List<MaterialColor> availableColors = List.from(_baseColors);
