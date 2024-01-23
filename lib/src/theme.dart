@@ -106,18 +106,22 @@ class AppTheme with ChangeNotifier {
   void _buildAppTheme() {
     // Update [_themeData] to reflect any changes to the components.
     _themeData = ThemeData(
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: _themeColor,
-        brightness: Brightness.light,
-      )
+      colorSchemeSeed: _themeColor,
+      brightness: Brightness.light
+      // colorScheme: ColorScheme.fromSwatch(
+      //   primarySwatch: _themeColor,
+      //   brightness: Brightness.light,
+      // )
     );
 
     // Update [_themeData] to reflect any changes to the components.
     _themeDataDark = ThemeData(
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: _themeColor,
-        brightness: Brightness.dark,
-      )
+      colorSchemeSeed: _themeColor,
+      brightness: Brightness.dark
+      // colorScheme: ColorScheme.fromSwatch(
+      //   primarySwatch: _themeColor,
+      //   brightness: Brightness.dark,
+      // )
     );
     // Notify the listeners.
     notifyListeners();
