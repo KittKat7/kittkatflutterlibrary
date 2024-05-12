@@ -5,12 +5,14 @@
 import 'package:flutter/foundation.dart';
 
 const bool platformIsWeb = kIsWeb;
+
 final bool platformIsLinux = defaultTargetPlatform == TargetPlatform.linux;
 final bool platformIsWindows = defaultTargetPlatform == TargetPlatform.windows;
-
 final bool platformIsMacOs = defaultTargetPlatform == TargetPlatform.macOS;
+
 final bool platformIsAndroid = defaultTargetPlatform == TargetPlatform.android;
 final bool platformIsIOS = defaultTargetPlatform == TargetPlatform.iOS;
 
-final bool platformIsDesktop = (platformIsLinux || platformIsWindows || platformIsMacOs);
+final bool platformIsDesktop =
+    (platformIsLinux || platformIsWindows || platformIsMacOs);
 final bool platformIsMobile = (platformIsAndroid || platformIsIOS);
