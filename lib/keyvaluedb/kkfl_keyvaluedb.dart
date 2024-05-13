@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 const String _metadataKey = "kkflKeyValueDB";
 const Map<String, dynamic> _metadataValue = {"version": 2024051100};
+const String _dbName = "kkflKeyValueDB";
 
 /// An abstract KeyValueDB class, expected to be accessed by using
 /// ```
@@ -66,9 +67,6 @@ abstract interface class _KeyValueDB {
 /// Implements [_KeyValueDB] for storing the data on a web platform. Should only be used by
 /// KeyValueDB when it deems nececary.
 class _WebKeyValueDB implements _KeyValueDB {
-  /// Name of the database in IndexedDB
-  static const String _dbName = "kkflKeyValueDB";
-
   /// Name of the data store/table in the database
   static const String _storeName = "data";
 
@@ -81,14 +79,14 @@ class _WebKeyValueDB implements _KeyValueDB {
   _WebKeyValueDB._();
 
   /// Opens the database, and returns an instance of this class
-  static Future<_WebKeyValueDB> open(String dbName) async {
+  static Future<_WebKeyValueDB> open([String dbName = _dbName]) async {
     // If there is already an instance, return that
     _WebKeyValueDB kvdb = _WebKeyValueDB._();
 
     IdbFactory? idbFactory = getIdbFactory();
 
     // open the database
-    kvdb._db = await idbFactory!.open("$_dbName-$dbName", version: 1,
+    kvdb._db = await idbFactory!.open(dbName, version: 1,
         onUpgradeNeeded: (VersionChangeEvent event) {
       Database db = event.database;
       // create the store
@@ -135,14 +133,13 @@ class _DesktopKeyValueDB implements _KeyValueDB {
   late Map<String, dynamic> dbMap;
 
   static late String directoryPath;
-  static const String _dbName = "kkflKeyValueDB";
 
   late File localFile;
 
   _DesktopKeyValueDB._();
 
   /// Opens the database, and returns an instance of this class
-  static Future<_DesktopKeyValueDB> open(String dbName) async {
+  static Future<_DesktopKeyValueDB> open([String dbName = _dbName]) async {
     // If there is already an instance, return that
     _DesktopKeyValueDB kvdb = _DesktopKeyValueDB._();
     kvdb.dbMap = {};
@@ -150,7 +147,7 @@ class _DesktopKeyValueDB implements _KeyValueDB {
     // The path of the application support files.
     directoryPath = (await getApplicationSupportDirectory()).path;
     // The local file which is used to store the database.
-    kvdb.localFile = File("$directoryPath/$_dbName-$dbName.json");
+    kvdb.localFile = File("$directoryPath/$dbName.json");
     if (!await kvdb.localFile.exists()) {
       await kvdb.localFile.create();
       await kvdb.setValue(_metadataKey, _metadataValue);
