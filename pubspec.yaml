@@ -1,6 +1,6 @@
 name: kittkatflutterlibrary
-description: "A new Flutter package project."
-version: 0.0.1
+description: "A collection of useful tools that I regularly use."
+version: 0.0.2
 homepage:
 
 environment:
@@ -14,11 +14,17 @@ dependencies:
   flutter_markdown: ^0.7.1
   # provider: used for theming
   provider: ^6.1.2
+  # idbshim: used for writing to web, keyvaluedb
+  idb_shim:
+  # path_provider: used to get specific paths for files, keyvaluedb
+  path_provider:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  mockito:
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
