@@ -76,7 +76,9 @@ class _WebKeyValueDB implements _KeyValueDB {
   @override
   late Map<String, dynamic> dbMap;
 
-  _WebKeyValueDB._();
+  _WebKeyValueDB._() {
+    dbMap = {};
+  }
 
   /// Opens the database, and returns an instance of this class
   static Future<_WebKeyValueDB> open([String dbName = _dbName]) async {
@@ -137,13 +139,14 @@ class _DesktopKeyValueDB implements _KeyValueDB {
 
   late File localFile;
 
-  _DesktopKeyValueDB._();
+  _DesktopKeyValueDB._() {
+    dbMap = {};
+  }
 
   /// Opens the database, and returns an instance of this class
   static Future<_DesktopKeyValueDB> open([String dbName = _dbName]) async {
     // If there is already an instance, return that
     _DesktopKeyValueDB kvdb = _DesktopKeyValueDB._();
-    kvdb.dbMap = {};
 
     // The path of the application support files.
     directoryPath = (await getApplicationSupportDirectory()).path;
