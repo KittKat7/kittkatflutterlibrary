@@ -7,14 +7,14 @@ import 'package:idb_shim/idb_browser.dart';
 import 'package:path_provider/path_provider.dart';
 
 const String _metadataKey = "kkflKeyValueDB";
-const Map<String, Object> _metadataValue = {"version": 2024051100};
+const Map<String, dynamic> _metadataValue = {"version": 2024051100};
 
 /// An abstract KeyValueDB class, expected to be accessed by using
 /// ```
 /// // Get a value
 /// KeyValueDB.getValue(String);
 /// // Set a value
-/// KeyValueDB.setValue(String, Object);
+/// KeyValueDB.setValue(String, dynamic);
 /// ```
 /// Must be initialized before use
 /// ```
@@ -39,13 +39,13 @@ abstract class KeyValueDB {
   }
 
   /// Get and return the value corosponding to the key, null if the key does not exist.
-  static Object? getValue(String key) {
+  static dynamic getValue(String key) {
     return _database!.getValue(key);
   }
 
   /// Sets the value in the database, returns true when the save is complete, however, it runs async
   /// so you have to wait for the return. The value is stored imidiatelly in mem, but async to disk.
-  static Future<bool> setValue(String key, Object value) async {
+  static Future<bool> setValue(String key, dynamic value) async {
     return await _database!.setValue(key, value);
   }
 }
@@ -53,14 +53,14 @@ abstract class KeyValueDB {
 /// Defines the actions that need to be able to be performed by the platform database instances.
 abstract interface class _KeyValueDB {
   /// Stores the data in memory for instant gets.
-  abstract Map<String, Object> dbMap;
+  abstract Map<String, dynamic> dbMap;
 
   /// Gets the value from the database.
-  Object? getValue(String key);
+  dynamic getValue(String key);
 
   /// Sets the value in the database, memory is instant, but saving to persistant is async. Returns
   /// true once saved to persistant.
-  Future<bool> setValue(String key, Object value);
+  Future<bool> setValue(String key, dynamic value);
 }
 
 /// Implements [_KeyValueDB] for storing the data on a web platform. Should only be used by
@@ -76,7 +76,7 @@ class _WebKeyValueDB implements _KeyValueDB {
   late Database _db;
 
   @override
-  late Map<String, Object> dbMap;
+  late Map<String, dynamic> dbMap;
 
   _WebKeyValueDB._();
 
@@ -113,12 +113,12 @@ class _WebKeyValueDB implements _KeyValueDB {
   }
 
   @override
-  Object? getValue(String key) {
+  dynamic getValue(String key) {
     return dbMap[key];
   }
 
   @override
-  Future<bool> setValue(String key, Object value) async {
+  Future<bool> setValue(String key, dynamic value) async {
     dbMap[key] = value;
     var txn = _db.transaction(_storeName, "readwrite");
     var store = txn.objectStore(_storeName);
@@ -132,7 +132,7 @@ class _WebKeyValueDB implements _KeyValueDB {
 /// persistant storage. Should only be used by [KeyValueDB] when deemed nececary.
 class _DesktopKeyValueDB implements _KeyValueDB {
   @override
-  late Map<String, Object> dbMap;
+  late Map<String, dynamic> dbMap;
 
   static late String directoryPath;
   static const String _dbName = "kkflKeyValueDB";
@@ -168,12 +168,12 @@ class _DesktopKeyValueDB implements _KeyValueDB {
   }
 
   @override
-  Object? getValue(String key) {
+  dynamic getValue(String key) {
     return dbMap[key];
   }
 
   @override
-  Future<bool> setValue(String key, Object value) async {
+  Future<bool> setValue(String key, dynamic value) async {
     dbMap[key] = value;
     await localFile.writeAsString(json.encode(dbMap));
     return true;
