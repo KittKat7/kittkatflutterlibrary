@@ -33,6 +33,8 @@ abstract class KeyValueDB {
     // If the platform is web, load the web database.
     if (platformIsWeb) {
       _database = await _WebKeyValueDB.open();
+    } else if (platformIsDesktop) {
+      _database = await _DesktopKeyValueDB.open();
     }
   }
 
