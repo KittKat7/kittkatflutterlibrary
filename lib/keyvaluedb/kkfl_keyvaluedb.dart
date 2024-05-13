@@ -149,6 +149,7 @@ class _DesktopKeyValueDB implements _KeyValueDB {
     directoryPath = (await getApplicationSupportDirectory()).path;
     // The local file which is used to store the database.
     kvdb.localFile = File("$directoryPath/kkflKeyValueDB.json");
+    if (!await kvdb.localFile.exists()) await kvdb.localFile.create();
 
     // Set the in memory database map to be the decoded json from the file.
     kvdb.dbMap = json.decode(await kvdb.localFile.readAsString());
