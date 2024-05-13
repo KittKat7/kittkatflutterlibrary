@@ -95,7 +95,8 @@ class _WebKeyValueDB implements _KeyValueDB {
 
     var txn = kvdb._db.transaction(_storeName, "readwrite");
     var store = txn.objectStore(_storeName);
-    List<String> keys = (await store.getAllKeys()) as List<String>;
+    print(await store.getAllKeys());
+    List<String> keys = (await store.getAllKeys()).cast<String>();
 
     for (String k in keys) {
       kvdb.dbMap[k] = (await store.getObject(k))!;
