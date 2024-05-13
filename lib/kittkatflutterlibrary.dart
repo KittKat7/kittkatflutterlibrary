@@ -5,3 +5,4 @@ export "./platform/kkfl_platform.dart";
 export "./routing/kkfl_routing.dart";
 export "./theming/kkfl_theming.dart";
 export "./widgets/kkfl_widgets.dart";
+export './keyvaluedb/kkfl_keyvaluedb.dart';
