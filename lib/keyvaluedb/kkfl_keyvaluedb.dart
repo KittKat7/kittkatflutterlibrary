@@ -26,15 +26,15 @@ abstract class KeyValueDB {
 
   /// Initialize the database. This will set the active instance of the database, and will
   /// initialize depending on whether the system is web, desktop, or mobile.
-  static Future<void> init() async {
+  static Future<void> init(String dbName) async {
     // If the database has already been initialized, return.
     if (_database != null) return;
 
     // If the platform is web, load the web database.
     if (platformIsWeb) {
-      _database = await _WebKeyValueDB.open();
+      _database = await _WebKeyValueDB.open(dbName);
     } else if (platformIsDesktop) {
-      _database = await _DesktopKeyValueDB.open();
+      _database = await _DesktopKeyValueDB.open(dbName);
     }
   }
 
@@ -81,14 +81,14 @@ class _WebKeyValueDB implements _KeyValueDB {
   _WebKeyValueDB._();
 
   /// Opens the database, and returns an instance of this class
-  static Future<_WebKeyValueDB> open() async {
+  static Future<_WebKeyValueDB> open(String dbName) async {
     // If there is already an instance, return that
     _WebKeyValueDB kvdb = _WebKeyValueDB._();
 
     IdbFactory? idbFactory = getIdbFactory();
 
     // open the database
-    kvdb._db = await idbFactory!.open(_dbName, version: 1,
+    kvdb._db = await idbFactory!.open("$_dbName-$dbName", version: 1,
         onUpgradeNeeded: (VersionChangeEvent event) {
       Database db = event.database;
       // create the store
@@ -135,21 +135,26 @@ class _DesktopKeyValueDB implements _KeyValueDB {
   late Map<String, Object> dbMap;
 
   static late String directoryPath;
+  static const String _dbName = "kkflKeyValueDB";
 
   late File localFile;
 
   _DesktopKeyValueDB._();
 
   /// Opens the database, and returns an instance of this class
-  static Future<_DesktopKeyValueDB> open() async {
+  static Future<_DesktopKeyValueDB> open(String dbName) async {
     // If there is already an instance, return that
     _DesktopKeyValueDB kvdb = _DesktopKeyValueDB._();
+    kvdb.dbMap = {};
 
     // The path of the application support files.
     directoryPath = (await getApplicationSupportDirectory()).path;
     // The local file which is used to store the database.
-    kvdb.localFile = File("$directoryPath/kkflKeyValueDB.json");
-    if (!await kvdb.localFile.exists()) await kvdb.localFile.create();
+    kvdb.localFile = File("$directoryPath/$_dbName-$dbName.json");
+    if (!await kvdb.localFile.exists()) {
+      await kvdb.localFile.create();
+      await kvdb.setValue(_metadataKey, _metadataValue);
+    }
 
     // Set the in memory database map to be the decoded json from the file.
     kvdb.dbMap = json.decode(await kvdb.localFile.readAsString());
