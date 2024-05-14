@@ -14,10 +14,6 @@ dependencies:
   flutter_markdown: ^0.7.1
   # provider: used for theming
   provider: ^6.1.2
-  # idbshim: used for writing to web, keyvaluedb
-  idb_shim:
-  # path_provider: used to get specific paths for files, keyvaluedb
-  path_provider:
 
 dev_dependencies:
   flutter_test:
